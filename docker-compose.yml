@@ -1,0 +1,61 @@
+version: "3.7"
+services:
+  api:
+    image: drmonkey/spring-boot-custom
+    # container_name: api
+    build: ./backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - contrast-net
+
+  db:
+    image: drmonkey/solr-from-schema
+    build: .
+    container_name: solr
+    entrypoint:
+    - docker-entrypoint.sh
+    - solr-precreate
+    - news
+    - /opt/solr/server/solr/configsets/newsConfig
+    ports:
+      - 8983:8983
+    networks:
+      - contrast-net
+    volumes:
+      - ./data:/opt/solr/server/solr/mycores
+
+  
+  #start_dependencies:
+  #  image: dadarek/wait-for-dependencies
+  #  depends_on:
+  #    - db
+  #  command: db:8983
+  #  networks:
+  #    - contrast-net
+
+#  node:
+#    image: drmonkey/node-vue
+#    container_name: vue
+#    build:
+#      context: ./frontend
+#      args:
+#        - NODE_ENV=development
+#    ports:
+#      - 80:80
+#    environment:
+#      - NODE_ENV=development
+#    depends_on:
+#      - api
+#    networks:
+#      contrast-net:
+#        aliases:
+#          - vue
+networks:
+  contrast-net:
+    name: contrast-net
+
+volumes:
+  data:
