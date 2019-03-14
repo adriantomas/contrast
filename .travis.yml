@@ -1,0 +1,15 @@
+matrix:
+  include:
+    - language: java
+      jdk: 
+        - openjdk8
+      before_install:
+        - cd backend
+
+    
+    - language: node_js
+      node_js:
+        - lts/*
+      before_install:
+        - cd frontend
+

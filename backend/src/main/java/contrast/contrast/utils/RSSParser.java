@@ -1,4 +1,4 @@
-package contrast.contrast.utilities;
+package contrast.contrast.utils;
 
 import java.io.File;
 import java.io.IOException;

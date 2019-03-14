@@ -2,7 +2,7 @@ version: "3.7"
 services:
   api:
     image: drmonkey/spring-boot-custom
-    # container_name: api
+    container_name: api
     build: ./backend
     ports:
       - 8080:8080
@@ -36,23 +36,22 @@ services:
   #  networks:
   #    - contrast-net
 
-#  node:
-#    image: drmonkey/node-vue
-#    container_name: vue
-#    build:
-#      context: ./frontend
-#      args:
-#        - NODE_ENV=development
-#    ports:
-#      - 80:80
-#    environment:
-#      - NODE_ENV=development
-#    depends_on:
-#      - api
-#    networks:
-#      contrast-net:
-#        aliases:
-#          - vue
+  node:
+    image: drmonkey/node-vue
+    container_name: vue
+    build:
+      context: ./frontend
+      args:
+        - NODE_ENV=development
+    ports:
+      - 80:80
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    networks:
+      - contrast-net
+
 networks:
   contrast-net:
     name: contrast-net
