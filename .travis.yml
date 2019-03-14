@@ -5,6 +5,7 @@ matrix:
         - openjdk8
       before_install:
         - cd backend
+        - chmod +x mvnw
 
     
     - language: node_js
