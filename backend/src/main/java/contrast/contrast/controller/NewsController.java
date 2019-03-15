@@ -1,9 +1,6 @@
 package contrast.contrast.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,11 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import contrast.contrast.repository.NewsRepository;
 import contrast.contrast.model.News;
+import contrast.contrast.utils.NewsCompare;
 import contrast.contrast.utils.RSSParser;
-import edu.stanford.nlp.io.IOUtils;
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import edu.stanford.nlp.simple.*;
+
+
 
 @RestController
 // @RequestMapping("/api")
@@ -35,9 +31,16 @@ public class NewsController {
     @PostMapping("/populate")
     public void populateSolr() throws IllegalArgumentException {
         RSSParser parser = new RSSParser();
-        parser.parseFeeds();
-        newsRepository.saveAll(parser.getParsedFeeds());
+        newsRepository.saveAll(parser.parseFeeds());
     }
+
+    @GetMapping("/comparison")
+    public void compare () {
+        Iterable<News> stories = newsRepository.findAll();
+        NewsCompare comparer = new NewsCompare();
+        comparer.compare(stories);
+    }
+    
 
     @GetMapping("/data")
     public String getSth() {
@@ -51,21 +54,6 @@ public class NewsController {
     @GetMapping("/data2")
     public Iterable<News> getSthf() {
         return newsRepository.findAll();
-    }
-
-    @GetMapping("/prova")
-    public String nlp() throws IOException {
-        //Document doc = new Document("Hola, mi nombre es Adrián Tomás.");
-        Annotation document = new Annotation("Hola, mi nombre es Adrián Tomás.");
-        Properties props = new Properties();
-        props.load(IOUtils.readerFromString("StanfordCoreNLP-spanish.properties"));
-        StanfordCoreNLP corenlp = new StanfordCoreNLP(props);
-        corenlp.annotate(document);
-        return document.toShorterString();
-        /*List<String> tags = new ArrayList<String>();
-        for (Sentence sent : doc.sentences()) {
-            tags.addAll(sent.nerTags());
-        }*/
     }
 
     /*@GetMapping("/feedentries")

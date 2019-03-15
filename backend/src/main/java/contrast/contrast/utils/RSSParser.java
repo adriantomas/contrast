@@ -3,7 +3,6 @@ package contrast.contrast.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
@@ -22,54 +21,27 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.core.io.ClassPathResource;
 
 import contrast.contrast.model.News;
+import contrast.contrast.utils.NERTagger;
 
 public class RSSParser {
 
-    private ArrayList<News> news;
+    private String[] sources;
 
     public RSSParser() {
-        news = new ArrayList<News>();
-    }
-
-    public ArrayList<SyndEntry> fullParse() {
-        ArrayList<SyndEntry> ret = new ArrayList<SyndEntry>();
+        sources = null;
         try {
-            String[] sources = null;
-            try {
-                File resource = new ClassPathResource("/static/RSS.txt").getFile();
-                String data = new String(Files.readAllBytes(resource.toPath()));
-                sources = data.split("\\r?\\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (sources != null) {
-                for (String rss : sources) {
-                    try (XmlReader reader = new XmlReader(new URL(rss))) {
-                        SyndFeed feed = new SyndFeedInput().build(reader);
-                        for (SyndEntry entry : feed.getEntries()) {
-                            ret.add(entry);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
+            File resource = new ClassPathResource("/static/RSS.txt").getFile();
+            String data = new String(Files.readAllBytes(resource.toPath()));
+            sources = data.split("\\r?\\n");
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return ret;
     }
 
-    public void parseFeeds() {
+    public ArrayList<News> parseFeeds() {
+        ArrayList<News> news = new ArrayList<News>();
+        NERTagger tagger = new NERTagger();
         try {
-            String[] sources = null;
-            try {
-                File resource = new ClassPathResource("/static/RSS.txt").getFile();
-                String data = new String(Files.readAllBytes(resource.toPath()));
-                sources = data.split("\\r?\\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             if (sources != null) {
                 for (String rss : sources) {
                     try (CloseableHttpClient client = HttpClients.createMinimal()){
@@ -82,9 +54,16 @@ public class RSSParser {
                                     for (SyndCategory cat : entry.getCategories()) {
                                         aux.add(cat.getName());
                                     }
-                                    this.news.add(new News(feed.getTitle(), entry.getTitle(), entry.getPublishedDate(),
-                                            entry.getLink(), entry.getDescription().getValue(), entry.getDescription().getValue().replaceAll("\\<.*?>/", ""),  aux));
-                                } //String.join(", ", aux)
+
+                                    news.add(new News(feed.getTitle(), 
+                                        entry.getTitle(), 
+                                        entry.getPublishedDate(),
+                                        entry.getLink(), 
+                                        entry.getDescription().getValue(), 
+                                        entry.getDescription().getValue().replaceAll("<[^>]*>", ""),  
+                                        aux,
+                                        tagger.getNERTags(entry.getDescription().getValue().replaceAll("<[^>]*>", "") + " " + entry.getTitle())));
+                                }
                             }       
                     }
                 }
@@ -92,15 +71,6 @@ public class RSSParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<News> getParsedFeeds() {
         return news;
-    }
-
-    public void printParsedFeeds() {
-        for (News story : this.news) {
-            System.out.println(story.toString());
-        }
     }
 }

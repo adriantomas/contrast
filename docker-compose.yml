@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   api:
-    image: drmonkey/spring-boot-custom
+    #image: drmonkey/spring-boot-custom
     container_name: api
     build: ./backend
     ports:
@@ -12,7 +12,7 @@ services:
       - contrast-net
 
   db:
-    image: drmonkey/solr-from-schema
+    #image: drmonkey/solr-from-schema
     build: .
     container_name: solr
     entrypoint:
@@ -37,7 +37,7 @@ services:
   #    - contrast-net
 
   node:
-    image: drmonkey/node-vue
+    #image: drmonkey/node-vue
     container_name: vue
     build:
       context: ./frontend

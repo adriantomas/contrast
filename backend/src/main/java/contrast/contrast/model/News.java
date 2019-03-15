@@ -15,34 +15,31 @@ public class News {
     @Id
     private String id;
 
-    //@Indexed(name = "newspaper", type = "string")
     @Field
     private String newspaper;
 
-    //@Indexed(name = "headline", type = "string")
     @Field
     private String headline;
 
-    //@Indexed(name = "date", type = "date")
     @Field
     private Date date;
 
     @Field
     private String link;
 
-    //@Indexed(name = "descriptionPlain", type = "string")
     @Field
     private String descriptionPlain;
 
-    //@Indexed(name = "descriptionRaw", type = "string")
     @Field
     private String descriptionRaw;
 
-    //@Indexed(name = "categories", type = "string")
     @Field
     private List<String> categories;
 
-    public News(String newspaper, String headline, Date date, String link, String descriptionRaw, String descriptionPlain, ArrayList<String> categories) {
+    @Field
+    private List<String> nerTags;
+
+    public News(String newspaper, String headline, Date date, String link, String descriptionRaw, String descriptionPlain, ArrayList<String> categories, ArrayList<String> nerTags) {
         this.id = UUID.nameUUIDFromBytes(link.getBytes(StandardCharsets.UTF_8)).toString();
         this.newspaper = newspaper;
         this.headline = headline;
@@ -54,6 +51,10 @@ public class News {
             this.categories = new ArrayList<String>();
         else
             this.categories = categories;
+        if (nerTags == null)
+            this.nerTags = new ArrayList<String>();
+        else
+            this.nerTags = nerTags;
     }
 
     public void setNewspaper(String newspaper) {
@@ -84,6 +85,10 @@ public class News {
         this.categories = categories;
     }
 
+    public void setNerTags(List<String> nerTags) {
+        this.nerTags = nerTags;
+    }
+
     public String getNewspaper() {
         return this.newspaper;
     }
@@ -112,9 +117,13 @@ public class News {
         return this.categories;
     }
 
+    public List<String> getNerTags() {
+        return this.nerTags;
+    }
+
     @Override
     public String toString() {
         return "NOTICIA: [PERIODICO: " + this.newspaper + ", TITULAR: " + this.headline + ", FECHA: " + this.date
-        + ", ENLACE: " + this.link + ", DESCRIPCION: " + this.descriptionPlain + ", CATEGORIAS: " + String.join(", ", this.categories) + "]";
+        + ", ENLACE: " + this.link + ", DESCRIPCION: " + this.descriptionPlain + ", CATEGORIAS: " + String.join(", ", this.categories) + ", NERTAGS: " + String.join(", ", this.nerTags) + "]";
     }
 }
