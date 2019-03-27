@@ -26,8 +26,11 @@ public class NERTagger {
             e.printStackTrace();
         }
         props.put("annotators", "tokenize,ssplit,pos,lemma,ner");
+        props.setProperty("ner.useSUTime", "false");
+        props.setProperty("ner.applyNumericClassifiers", "false");
+        props.setProperty("ner.applyFineGrained", "false");
         pipeline = new StanfordCoreNLP(props);
-        selectedTags = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON", "CITY", "COUNTRY");
+        selectedTags = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON"/*, "CITY", "COUNTRY"*/);
     }
 
     public ArrayList<String> getNERTags (String doc) {
@@ -37,8 +40,6 @@ public class NERTagger {
         for (CoreEntityMention em : document.entityMentions()) 
             if (selectedTags.contains(em.entityType()))
                 nerTagsNotDup.add(em.text());
-        ArrayList<String> nerTags = new ArrayList<String>();
-        nerTags.addAll(nerTagsNotDup);
-        return nerTags;
+        return new ArrayList<String>(nerTagsNotDup);
     }
 }

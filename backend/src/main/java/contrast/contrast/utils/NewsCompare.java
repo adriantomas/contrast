@@ -2,10 +2,8 @@ package contrast.contrast.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import contrast.contrast.model.News;
@@ -13,12 +11,10 @@ import contrast.contrast.utils.NewsPairComparator;
 
 public class NewsCompare {
 
-    private Map<Set<String>, Set<News>> themes;
 
     private List<NewsPair> pairsOfNews;
     
     public NewsCompare () {
-        themes = new HashMap<Set<String>, Set<News>>();
         pairsOfNews = new ArrayList<NewsPair>();
     }
 
@@ -27,16 +23,55 @@ public class NewsCompare {
     public void compare (Iterable<News> stories) {
         for (News storyA : stories) {
             for (News storyB : stories) {
-                pairsOfNews.add(new NewsPair(storyA, storyB));
+                if (!storyA.equals(storyB)){
+                    NewsPair pairNews = new NewsPair(storyA, storyB);
+                    boolean alreadyIn = false;
+                    for (NewsPair pair : pairsOfNews) {
+                        if (pair.equalsNews(pairNews)) {
+                            alreadyIn = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyIn && pairNews.getTagsMatches() > 0) {
+                        pairsOfNews.add(pairNews);    
+                    }                          
+                }              
             }
         }
-        Collections.sort(pairsOfNews, new NewsPairComparator());
-        for (NewsPair pairNews : pairsOfNews) {
-            System.out.println("PAREJA DE NOTICIAS");
-            System.out.println("TITULAR 1: " + pairNews.getFirstNews().getNews().getHeadline());
-            System.out.println("TITULAR 2: " + pairNews.getSecondNews().getNews().getHeadline());
-            System.out.println("ETIQUETAS EN COMUN: " + pairNews.getTagsMatches() + " ::: " + String.join(",", pairNews.getSimilarTags()));
-            System.out.println("******************************");
+
+        if (pairsOfNews.size() != 0) {
+            Collections.sort(pairsOfNews, new NewsPairComparator());
+            List<Theme> themes = new ArrayList<Theme>();
+            Theme firstTheme = new Theme(pairsOfNews.get(0).getSimilarTags(), pairsOfNews.get(0).getFirstNews().getNews(), pairsOfNews.get(0).getSecondNews().getNews());
+            themes.add(firstTheme);
+            pairsOfNews.remove(0);
+
+            List<NewsPair> newsRelated = new ArrayList<NewsPair>();
+            for (News story : stories) {
+                if (!firstTheme.getNewsList().contains(story)) {
+                    NewsAndTags newsTags = new NewsAndTags(story);
+                    Set<String> similarTags = new HashSet<String>(firstTheme.getTags());
+                    similarTags.retainAll(newsTags.getTags());
+                    if (similarTags.size() > 0) {
+                        NewsPair pair = new NewsPair(story, similarTags);
+                        newsRelated.add(pair);
+                    }
+                }                     
+            }
+            Collections.sort(newsRelated, new NewsPairComparator());
+            System.out.println("TEMA");
+            System.out.println("ETIQUETAS: " + String.join(",", firstTheme.getTags()));
+            System.out.println("TITULARES: ");
+            for (News story : firstTheme.getNewsList()) {
+                System.out.println(story.getHeadline());
+            }
+            System.out.println("---------------------------");
+            for (NewsPair pair : newsRelated) {
+                System.out.println("NOTICIA:");
+                System.out.println(pair.getFirstNews().getNews().getHeadline());
+                System.out.println("TAGS IGUALES: " + pair.getTagsMatches() + " ::: " + String.join(",", pair.getSimilarTags()));
+                System.out.println("******************************");
+            }
         }
     }
 

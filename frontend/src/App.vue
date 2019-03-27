@@ -1,10 +1,18 @@
 <template>
-  <v-app>
+  <v-app dark>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>contrast</span>
+        <span class="font-weight-light"></span>
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-text-field
+      prepend-inner-icon="search"
+      >
+      </v-text-field>
+      <v-btn icon class="hidden-xs-only">
+        <v-icon>md-dropdown</v-icon>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn
         flat
@@ -15,8 +23,24 @@
         <v-icon>open_in_new</v-icon>
       </v-btn>
     </v-toolbar>
-
     <v-content>
+     <!-- <v-expansion-panel 
+      v-model="panel"
+      expand>
+    <v-expansion-panel-content>
+      <v-autocomplete
+        v-model="model"
+        :hint="Hola"
+        :items="tags"
+        :label="HOLA"
+        prepend-icon="search"
+      >
+      </v-autocomplete>
+      <v-btn icon class="hidden-xs-only">
+        <v-icon>search</v-icon>
+      </v-btn>
+    </v-expansion-panel-content>
+    </v-expansion-panel>  -->
       <router-view/>
     </v-content>
   </v-app>
