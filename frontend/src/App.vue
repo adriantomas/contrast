@@ -13,15 +13,92 @@
       </div>
       <div>
         <span class="title">Fecha</span>
-        <v-date-picker 
-          v-model="dateSelected"
-          first-day-of-week="1"
-          locale="es-es"
-          reactive
-          no-title
-          :max="today">
-        </v-date-picker>
+        <v-menu 
+          offset-y 
+          v-model="datePicker1"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          lazy
+          transition="scale-transition"
+          full-width>
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              label="Desde"
+              v-model="formattedDate1"
+              hint="Algo por aqui"
+              persistent-hint
+              prepend-icon="event"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker 
+            v-model="dateSelected1" 
+            no-title  
+            @input="datePicker1 = false"
+            first-day-of-week="1"
+            locale="es-es"
+            reactive
+            :max="dateSelected2"></v-date-picker> 
+        </v-menu>
+        <v-menu 
+          offset-y 
+          v-model="datePicker2"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          lazy
+          transition="scale-transition"
+          full-width>
+          <template v-slot:activator="{ on }">
+            <v-text-field
+              label="Hasta"
+              v-model="formattedDate2"
+              hint="Algo por aqui"
+              persistent-hint
+              prepend-icon="event"
+              readonly
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker 
+            v-model="dateSelected2" 
+            no-title  
+            @input="datePicker2 = false"
+            first-day-of-week="1"
+            locale="es-es"
+            reactive
+            :max="today"></v-date-picker> 
+        </v-menu>
       </div>
+
+      <div>
+        <v-subheader>Etiquetas</v-subheader>
+        <v-autocomplete
+          v-model="etiquetasSeleccionadas"
+          :items="etiquetas"
+          box
+          chips
+          color="accent"
+          label="Selecciona"
+          multiple
+          >
+          <template v-slot:selection="data">
+            <v-chip
+              :selected="data.selected"
+              close
+              class="chip--select-multi"
+              @input="remove(data.item)"
+              >
+              <v-avatar>
+                <v-icon>label</v-icon>
+              </v-avatar>
+              {{ data.item }}
+            </v-chip>
+          </template>
+          
+        </v-autocomplete>
+      </div>
+
     </v-navigation-drawer>
 
     <v-toolbar app fixed clipped-right>
@@ -72,14 +149,28 @@ export default {
   data: () => ({
     periodicos: ["eldiario", "elmundo", "elpais"],
     selectedNewspapers: ["eldiario", "elmundo", "elpais"],
-    dateSelected: new Date().toISOString().substr(0,10),
-    today: new Date().toISOString().substr(0,10)
+    dateSelected1: new Date().toISOString().substr(0,10),
+    dateSelected2: new Date().toISOString().substr(0,10),
+    today: new Date().toISOString().substr(0,10),
+    datePicker1: false,
+    datePicker2: false,
+    etiquetas: ["deporte", "política", "nacional", "Murcia"],
+    etiquetasSeleccionadas: []
   }),
 
   computed: {
-    formatDate () {
-      return this.dateSelected ? moment(this.dateSelected).format('DD/MM/YYYY') : ''
+    formattedDate1 () {
+      return this.dateSelected1 ? moment(this.dateSelected1).format('DD/MM/YYYY') : ''
+    },
+    formattedDate2 () {
+      return this.dateSelected2 ? moment(this.dateSelected2).format('DD/MM/YYYY') : ''
     }
-  }
+  },
+  methods: {
+      remove (item) {
+        const index = this.etiquetasSeleccionadas.indexOf(item)
+        if (index >= 0) this.etiquetasSeleccionadas.splice(index, 1)
+      }
+    }
 };
 </script>
