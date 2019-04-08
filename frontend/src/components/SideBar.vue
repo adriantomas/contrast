@@ -1,13 +1,8 @@
 <template>
   <v-card class="d-inline-block elevation-12">
-    <v-navigation-drawer floating permanent stateless value="true" >
+    <v-navigation-drawer floating permanent stateless value="true">
       <v-toolbar flat>
         <v-toolbar-title>contrast</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn flat href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
-          <span class="mr-2">Github</span>
-          <v-icon>open_in_new</v-icon>
-        </v-btn>
       </v-toolbar>
 
       <v-divider></v-divider>
@@ -27,6 +22,14 @@
         <v-divider></v-divider>
 
         <TagPicker/>
+
+        <v-divider></v-divider>
+        <v-flex class="mb-4">
+          <v-btn flat href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
+            <span class="mr-2">Github</span>
+            <v-icon>open_in_new</v-icon>
+          </v-btn>
+        </v-flex>
       </v-layout>
     </v-navigation-drawer>
   </v-card>
@@ -40,9 +43,9 @@ import TagPicker from "./TagPicker";
 export default {
   data: () => ({}),
   components: {
-      NewspaperPicker,
-      DatePicker,
-      TagPicker
+    NewspaperPicker,
+    DatePicker,
+    TagPicker
   }
 };
 </script>
