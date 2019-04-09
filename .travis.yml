@@ -31,6 +31,4 @@ before_install:
   - cd backend
   - chmod +x mvnw
 
-  - docker-compose pull -q
-  - docker-compose build --force-rm
-  - docker-compose up -d
+  - docker-compose up -d --build --quiet-pull
