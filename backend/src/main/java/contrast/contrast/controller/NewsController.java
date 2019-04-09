@@ -1,6 +1,9 @@
 package contrast.contrast.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import contrast.contrast.repository.NewsRepository;
@@ -21,7 +25,7 @@ import contrast.contrast.utils.RSSParser;
 
 
 @RestController
-// @RequestMapping("/api")
+@RequestMapping("/api")
 public class NewsController {
 
     @Autowired
@@ -52,8 +56,9 @@ public class NewsController {
     }
 
     @GetMapping("/data2")
-    public Iterable<News> getSthf() {
-        return newsRepository.findAll();
+    public List<News> getSthf() {
+        //return newsRepository.findAll();
+        return StreamSupport.stream(newsRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
     /*@GetMapping("/feedentries")

@@ -41,11 +41,11 @@
       >
         mdi-newspaper
       </v-icon>
-      <span class="title font-weight-light">Periódico</span>
+      <span class="title font-weight-light">{{ newspaper }}</span>
     </v-card-title>
 
     <v-card-text class="headline font-weight-bold">
-      Titular
+      {{ headline }}
     </v-card-text>
 
     <v-card-actions>
@@ -63,14 +63,14 @@
         <v-list-tile-content>
           <v-list-tile-title>Evan You</v-list-tile-title>
         </v-list-tile-content> -->
-<v-btn >Ampliar</v-btn>
+<v-btn>Ampliar</v-btn>
       <v-spacer></v-spacer>
         <!-- <v-layout
           align-center
           justify-end
         > -->
           <v-icon class="mr-1">mdi-calendar</v-icon>
-          <span class="subheading mr-2">DD/MM/YYYY</span>
+          <span class="subheading mr-2">{{ dateFormat(date) }}</span>
           <!-- <span class="mr-1">·</span>
           <v-icon class="mr-1">mdi-share-variant</v-icon>
           <span class="subheading">45</span> -->
@@ -82,9 +82,25 @@
 </template>
 
 <script>
+
+import moment from "moment";
+
 export default {
   data: () => ({
-    show: false
-  })
+    
+  }),
+  methods: {
+    /* dateFormat(date) {
+      return moment(date).format("LLLL");
+    }, */
+    dateFormat(date) {
+      return moment(date).format("DD/MM/YYYY");
+    },
+  },
+  props: {
+    headline: String,
+    newspaper: String,
+    date: String,
+  }
 };
 </script>
