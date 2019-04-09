@@ -1,7 +1,7 @@
 <template>
     <v-container fluid grid-list-md>
         <v-layout row wrap>
-            <v-flex v-for="i in 9" :key="i" xs3>
+            <v-flex v-for="i in 9" :key="i" xs4>
                 <NewsCard/>
             </v-flex>
         </v-layout>

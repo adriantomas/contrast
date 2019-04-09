@@ -61,7 +61,22 @@
 </template>
 
 <script>
+
+import moment from "moment";
+
 export default {
-     data: () => ({})
-}
+  data: () => ({}),
+  computed: {
+    formattedDate1() {
+      return this.dateSelected1
+        ? moment(this.dateSelected1).format("DD/MM/YYYY")
+        : "";
+    },
+    formattedDate2() {
+      return this.dateSelected2
+        ? moment(this.dateSelected2).format("DD/MM/YYYY")
+        : "";
+    }
+  }
+};
 </script>

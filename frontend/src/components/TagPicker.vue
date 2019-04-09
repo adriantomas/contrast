@@ -28,5 +28,12 @@
 <script>
 export default {
   data: () => ({})
+  ,
+  methods: {
+    remove(item) {
+      const index = this.etiquetasSeleccionadas.indexOf(item);
+      if (index >= 0) this.etiquetasSeleccionadas.splice(index, 1);
+    }
+  }
 };
 </script>

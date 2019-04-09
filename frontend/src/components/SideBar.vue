@@ -24,12 +24,14 @@
         <TagPicker/>
 
         <v-divider></v-divider>
-        <v-flex class="mb-4">
+
+        <!-- <v-flex class="mb-4"> -->
           <v-btn flat href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
             <span class="mr-2">Github</span>
             <v-icon>open_in_new</v-icon>
           </v-btn>
-        </v-flex>
+       <!--  </v-flex> -->
+
       </v-layout>
     </v-navigation-drawer>
   </v-card>
