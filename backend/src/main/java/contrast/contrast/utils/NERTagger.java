@@ -6,7 +6,6 @@ import edu.stanford.nlp.pipeline.CoreEntityMention;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,13 +32,13 @@ public class NERTagger {
         selectedTags = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON"/*, "CITY", "COUNTRY"*/);
     }
 
-    public ArrayList<String> getNERTags (String doc) {
+    public Set<String> getNERTags (String doc) {
         Set<String> nerTagsNotDup = new HashSet<String>();
         CoreDocument document = new CoreDocument(doc);
         pipeline.annotate(document);
         for (CoreEntityMention em : document.entityMentions()) 
             if (selectedTags.contains(em.entityType()))
                 nerTagsNotDup.add(em.text());
-        return new ArrayList<String>(nerTagsNotDup);
+        return nerTagsNotDup;
     }
 }

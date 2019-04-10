@@ -2,9 +2,9 @@ package contrast.contrast.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -85,14 +85,25 @@ public class NewsController {
         return newsRepository.findByNewspaper(fragment);
     }
 
-    @GetMapping(value="/content/{fragment}/{page}")
+    /* @GetMapping(value="/content/{fragment}/{page}")
     public List<News> getMethodName(@PathVariable String fragment, @PathVariable int page) {
-        return newsRepository.findByHeadlineOrCategoriesOrDescriptionPlainAndFacetOnNewspaper(fragment, PageRequest.of(page, 8)).getContent();
+        return newsRepository.findByHeadlineOrCategoriesOrDescriptionPlainAndFacetOnNewspaper(fragment, PageRequest.of(page, 9)).getContent();
+    } */
+
+    @GetMapping(value="/content/{newspaper}/{initialDate}/{finalDate}/{categories}/{fragment}/{page}")
+    public FacetPage<News> getMethodName2(@PathVariable String newspaper, @PathVariable String initialDate, @PathVariable String finalDate, @PathVariable String categories, @PathVariable String fragment, @PathVariable int page) {
+        return newsRepository.findByHeadlineOrCategoriesOrDescriptionPlainAndFacetOnNewspaper(fragment, PageRequest.of(page, 9));
     }
 
-    @GetMapping(value="/content2/{fragment}/{page}")
-    public FacetPage<News> getMethodName2(@PathVariable String fragment, @PathVariable int page) {
-        return newsRepository.findByHeadlineOrCategoriesOrDescriptionPlainAndFacetOnNewspaper(fragment, PageRequest.of(page, 8));
+    @GetMapping("/prova/prova/{tags}")
+    public FacetPage<News> getMethodName3(@PathVariable List<String> tags) {
+        String query = "(*" + StringUtils.join(tags, "* AND *") + "*)";
+        return newsRepository.findByCategories(query, PageRequest.of(0, 9));
+    }
+
+    @GetMapping(value="/content")
+    public FacetPage<News> getMethodName() {
+        return newsRepository.findAllFacetOnNewspaperAndDateAndCategories(PageRequest.of(0, 9));
     }
     
 

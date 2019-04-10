@@ -1,9 +1,9 @@
 package contrast.contrast.model;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.solr.client.solrj.beans.Field;
@@ -22,7 +22,7 @@ public class News {
     private String headline;
 
     @Field
-    private Date date;
+    private LocalDateTime date;
 
     @Field
     private String link;
@@ -34,12 +34,10 @@ public class News {
     private String descriptionRaw;
 
     @Field
-    private List<String> categories;
+    private Set<String> categories;
 
-    @Field
-    private List<String> nerTags;
 
-    public News(String newspaper, String headline, Date date, String link, String descriptionRaw, String descriptionPlain, ArrayList<String> categories, ArrayList<String> nerTags) {
+    public News(String newspaper, String headline, LocalDateTime date, String link, String descriptionRaw, String descriptionPlain, Set<String> categories) {
         this.id = UUID.nameUUIDFromBytes(link.getBytes(StandardCharsets.UTF_8)).toString();
         this.newspaper = newspaper;
         this.headline = headline;
@@ -48,13 +46,9 @@ public class News {
         this.descriptionRaw = descriptionRaw;
         this.descriptionPlain = descriptionPlain;
         if (categories == null)
-            this.categories = new ArrayList<String>();
+            this.categories = new HashSet<String>();
         else
             this.categories = categories;
-        if (nerTags == null)
-            this.nerTags = new ArrayList<String>();
-        else
-            this.nerTags = nerTags;
     }
 
     public void setNewspaper(String newspaper) {
@@ -65,7 +59,7 @@ public class News {
         this.headline = headline;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -81,13 +75,13 @@ public class News {
         this.descriptionRaw = descriptionRaw;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(Set<String> categories) {
         this.categories = categories;
     }
 
-    public void setNerTags(List<String> nerTags) {
+    /* public void setNerTags(List<String> nerTags) {
         this.nerTags = nerTags;
-    }
+    } */
 
     public String getNewspaper() {
         return this.newspaper;
@@ -97,7 +91,7 @@ public class News {
         return this.headline;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
@@ -113,17 +107,17 @@ public class News {
         return this.descriptionRaw;
     }
 
-    public List<String> getCategories() {
+    public Set<String> getCategories() {
         return this.categories;
     }
 
-    public List<String> getNerTags() {
+    /* public List<String> getNerTags() {
         return this.nerTags;
-    }
+    } */
 
     @Override
     public String toString() {
         return "NOTICIA: [PERIODICO: " + this.newspaper + ", TITULAR: " + this.headline + ", FECHA: " + this.date
-        + ", ENLACE: " + this.link + ", DESCRIPCION: " + this.descriptionPlain + ", CATEGORIAS: " + String.join(", ", this.categories) + ", NERTAGS: " + String.join(", ", this.nerTags) + "]";
+        + ", ENLACE: " + this.link + ", DESCRIPCION: " + this.descriptionPlain + ", CATEGORIAS: " + String.join(", ", this.categories) /* + ", NERTAGS: " + String.join(", ", this.nerTags) */ + "]";
     }
 }

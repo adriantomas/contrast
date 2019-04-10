@@ -13,7 +13,7 @@ public class NewsAndTags {
 
     public NewsAndTags (News story) {
         this.story = story;
-        this.tags = new HashSet<String>(Stream.concat(story.getCategories().stream(), story.getNerTags().stream()).collect(Collectors.toList()));
+        /* this.tags = new HashSet<String>(Stream.concat(story.getCategories().stream(), story.getNerTags().stream()).collect(Collectors.toList())); */
     }
 
     public News getNews () {
