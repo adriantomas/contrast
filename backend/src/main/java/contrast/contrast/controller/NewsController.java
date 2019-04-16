@@ -1,5 +1,8 @@
 package contrast.contrast.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -90,10 +93,10 @@ public class NewsController {
         return newsRepository.findByHeadlineOrCategoriesOrDescriptionPlainAndFacetOnNewspaper(fragment, PageRequest.of(page, 9)).getContent();
     } */
 
-    @GetMapping(value="/content/{newspaper}/{initialDate}/{finalDate}/{categories}/{fragment}/{page}")
+    /* @GetMapping(value="/content/{newspaper}/{initialDate}/{finalDate}/{categories}/{fragment}/{page}")
     public FacetPage<News> getMethodName2(@PathVariable String newspaper, @PathVariable String initialDate, @PathVariable String finalDate, @PathVariable String categories, @PathVariable String fragment, @PathVariable int page) {
         return newsRepository.findByHeadlineOrCategoriesOrDescriptionPlainAndFacetOnNewspaper(fragment, PageRequest.of(page, 9));
-    }
+    } */
 
     @GetMapping("/prova/prova/{tags}")
     public FacetPage<News> getMethodName3(@PathVariable List<String> tags) {
@@ -101,11 +104,18 @@ public class NewsController {
         return newsRepository.findByCategories(query, PageRequest.of(0, 9));
     }
 
+    @GetMapping("/content/{newspapers}/{initialDate}/{finalDate}/{tags}/{fragment}/{page}")
+    public FacetPage<News> getMethodName4(@PathVariable List<String> newspapers, @PathVariable String initialDate, @PathVariable String finalDate, @PathVariable List<String> tags, @PathVariable String fragment, @PathVariable int page) {
+        String tagsQuery = "(*" + StringUtils.join(tags, "* AND *") + "*)";
+        String newspapersQuery = "(*" + StringUtils.join(newspapers, "* OR *") + "*)";
+        String dateQuery = "[" + LocalDateTime.of(LocalDate.parse(initialDate), LocalTime.MIN).toString() + ":00Z TO " + LocalDateTime.of(LocalDate.parse(finalDate), LocalTime.MAX).toString() + "Z]";
+        return newsRepository.findByLotOfThings(newspapersQuery, dateQuery, tagsQuery, fragment, PageRequest.of(0, 9));
+    }
+
     @GetMapping(value="/content")
     public FacetPage<News> getMethodName() {
         return newsRepository.findAllFacetOnNewspaperAndDateAndCategories(PageRequest.of(0, 9));
-    }
-    
+    } 
 
     /*
      * @GetMapping("/search/{searchTerm}/{page}") public List<News>
