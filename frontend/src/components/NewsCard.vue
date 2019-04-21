@@ -51,7 +51,7 @@
         <v-list-tile-content>
           <v-list-tile-title>Evan You</v-list-tile-title>
         </v-list-tile-content>-->
-        <v-btn>Ampliar</v-btn>
+        <v-btn @click="">Ampliar</v-btn>
         <v-spacer></v-spacer>
         <!-- <v-layout
           align-center
@@ -80,6 +80,9 @@ export default {
     }, */
     dateFormat(date) {
       return moment(date).format("DD/MM/YYYY");
+    },
+    readNews() {
+      
     }
   },
   props: {

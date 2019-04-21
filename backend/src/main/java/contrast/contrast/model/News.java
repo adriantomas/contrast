@@ -13,6 +13,7 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
 @SolrDocument(collection = "news") //Define el documento en Solr
 public class News {
     @Id
+    @Field
     private String id;
 
     @Field
@@ -51,6 +52,10 @@ public class News {
             this.categories = categories;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setNewspaper(String newspaper) {
         this.newspaper = newspaper;
     }
@@ -83,6 +88,10 @@ public class News {
         this.nerTags = nerTags;
     } */
 
+    public String getId() {
+        return this.id;
+    }
+    
     public String getNewspaper() {
         return this.newspaper;
     }

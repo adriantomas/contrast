@@ -9,29 +9,38 @@
 
       <v-layout column wrap class="mx-2">
         <v-flex>
-          <v-text-field prepend-inner-icon="search" clearable label="Buscar"></v-text-field>
+          <v-text-field prepend-inner-icon="search" clearable label="Buscar" v-model="fragmentSelected"></v-text-field>
         </v-flex>
         <v-divider></v-divider>
 
-        <NewspaperPicker/>
+        <NewspaperPicker
+          :newspapersBase="newspapersBase"
+          :newspapersSelected="newspapersSelected"
+          @updateNewspapers="onUpdateNewspapers"
+        />
 
         <v-divider></v-divider>
 
-        <DatePicker/>
+        <DatePicker
+          :datesFacets="datesFacets"
+          :initialDateSelected="initialDateSelected"
+          :finalDateSelected="finalDateSelected"
+          @updateInitialDate="onUpdateInitialDate"
+          @updateFinalDate="onUpdateFinalDate"
+        />
 
         <v-divider></v-divider>
 
-        <TagPicker/>
+        <TagPicker :tags="tags" :tagsSelected="tagsSelected" @updateTags="onUpdateTags"/>
 
         <v-divider></v-divider>
 
         <!-- <v-flex class="mb-4"> -->
-          <v-btn flat href="https://github.com/adriantomas/contrast" target="_blank">
-            <span class="mr-2">Github</span>
-            <v-icon>open_in_new</v-icon>
-          </v-btn>
-       <!--  </v-flex> -->
-
+        <v-btn flat href="https://github.com/adriantomas/contrast" target="_blank">
+          <span class="mr-2">Github</span>
+          <v-icon>open_in_new</v-icon>
+        </v-btn>
+        <!--  </v-flex> -->
       </v-layout>
     </v-navigation-drawer>
   </v-card>
@@ -50,7 +59,34 @@ export default {
     TagPicker
   },
   props: {
-    noticias: Array
-  }
+    newspapersSelected: Array,
+    newspapersBase: Array,
+    datesFacets: Array,
+    initialDateSelected: String,
+    finalDateSelected: String,
+    tags: Array,
+    tagsSelected: Array,
+    fragment: String
+  },
+  methods: {
+    onUpdateNewspapers(newspapers) {
+      this.$emit("updateNewspapers", newspapers);
+    },
+    onUpdateInitialDate(date) {
+      this.$emit("updateInitialDate", date);
+    },
+    onUpdateFinalDate(date) {
+      this.$emit("updateFinalDate", date);
+    },
+    onUpdateTags(tags) {
+      this.$emit("updateTags", tags);
+    }
+  },
+  computed: {
+    fragmentSelected : {
+      get () { return this.fragment },
+      set (v) { this.$emit('updateFragment', v)}
+    }
+  },
 };
 </script>
