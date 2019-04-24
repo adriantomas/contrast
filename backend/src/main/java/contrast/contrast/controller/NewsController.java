@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import contrast.contrast.repository.NewsRepository;
 import contrast.contrast.model.News;
@@ -73,7 +75,7 @@ public class NewsController {
             try {
                 fragment = java.net.URLDecoder.decode(fragment, StandardCharsets.UTF_8.name());
             } catch (UnsupportedEncodingException e) {}    
-            fragmentQuery = "*" + '"' + fragment + + '"' + "*";
+            fragmentQuery = "*" + '"' + fragment + '"' + "*";
         }
         else {
             fragmentQuery = fragment;
@@ -87,4 +89,14 @@ public class NewsController {
     public FacetPage<News> getNews(@PathVariable int page) {
         return newsRepository.findAllFacetOnNewspaperAndDateAndCategoriesOrderByDateDescOrderByHeadline(PageRequest.of(page, 9, new Sort(Sort.Direction.DESC, "date").and(new Sort(Sort.Direction.DESC, "headline"))));
     } 
+
+    @GetMapping(value="/related/{tags}")
+    public String getRelatedNews(@PathVariable List<String> tags) {
+        String uri = "http://localhost:8983/solr/news/select?defType=edismax&q=categories%3A";
+        String tagsQuery = uri + "(" + '"' + StringUtils.join(tags, '"' + "%20 OR %20" + '"') + '"' + ')';
+
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(tagsQuery, String.class);
+        return result;
+    }
 }

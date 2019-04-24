@@ -18,5 +18,4 @@ public interface NewsRepository extends SolrCrudRepository<News, String> {
     @Facet(fields = { "newspaper", "date", "categories" }) 
     FacetPage<News> findAllFacetOnNewspaperAndDateAndCategoriesOrderByDateDescOrderByHeadline(Pageable page);
 
-    
 }

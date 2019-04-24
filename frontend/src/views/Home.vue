@@ -19,30 +19,12 @@
         />
       </v-flex>
       <v-flex>
-        <NewsList :news="news"/>
+        <NewsList :news="news" :readNews="onClickReadNews"/>
         <v-layout row justify-center>
           <v-pagination :length="totalPages" v-model="page" v-on:input="this.search" :total-visible="7"></v-pagination>
         </v-layout>
       </v-flex>
     </v-layout>
-
-    <v-dialog
-      v-model="dialog"
-      scrollable  
-    >
-      <v-card>
-        <v-card-title primary-title>
-          title
-        </v-card-title>
-        <v-card-text>
-          
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="success" @click="dialog = false">Cerrar</v-btn>
-        </v-card-actions>
-      </v-card>    
-    </v-dialog>
-
   </v-container>
 </template>
 
@@ -158,6 +140,9 @@ export default {
         .catch(e => {
           this.errors.push(e);
         });
+    },
+    onClickReadNews(news) {
+
     },
     onUpdateNewspapers(newspapers) {
       this.newspapersSelected = newspapers;

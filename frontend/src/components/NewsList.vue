@@ -2,7 +2,7 @@
     <v-container fluid grid-list-md>
         <v-layout row wrap>
             <v-flex v-for="story in news" :key="story.id" xs4>
-                <NewsCard :headline="story.headline" :newspaper="story.newspaper" :date="story.date"/>
+                <NewsCard :story="story" @readNews="onClickReadNews"/>
             </v-flex>
         </v-layout>
     </v-container>
@@ -22,6 +22,11 @@ export default {
      },
      props: {
          news: Array,
+     },
+     methods: {
+        onClickReadNews (news) {
+            this.$emit("readNews", news);
+        }
      }
 }
 </script>
