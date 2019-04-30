@@ -70,38 +70,33 @@
     <v-dialog v-model="dialog" scrollable width="60%">
       <v-card>
         <v-card-title primary-title class="headline">{{ story.headline }}</v-card-title>
-        <v-card-text v-html="story.descriptionRaw"></v-card-text>
-        <!-- <v-card-actions>
-          <v-btn color="success">text</v-btn>
-          <v-divider></v-divider>
-          <v-btn color="success" @click="dialog = false">Cerrar</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="success">Texta</v-btn>
-        </v-card-actions>-->
-        <v-layout align-center>
-          <v-item-group v-model="window" class="shrink mr-4" mandatory tag="v-flex">
-            <v-item v-for="n in length" :key="n">
-              <div slot-scope="{ active, toggle }">
-                <v-btn :input-value="active" icon @click="toggle">
-                  <v-icon small>mdi-record</v-icon>
-                </v-btn>
-              </div>
-            </v-item>
-          </v-item-group>
+        <v-card-text>
+          <span v-html="story.descriptionRaw"></span>
+          <p class="headline">Noticias similares</p>
+          <v-layout align-center>
+            <v-item-group v-model="window" class="shrink mr-4" mandatory tag="v-flex">
+              <v-item v-for="relatedStory in relatedNews" :key="relatedStory.id">
+                <div slot-scope="{ active, toggle }">
+                  <v-btn :input-value="active" icon @click="toggle">
+                    <v-icon small>mdi-record</v-icon>
+                  </v-btn>
+                </div>
+              </v-item>
+            </v-item-group>
 
-          <v-flex>
-            <v-window v-model="window" class="elevation-1" vertical>
-              <v-window-item v-for="n in length" :key="n">
-                <v-card flat>
-                  <v-card-title>
-                    <v-icon large left>mdi-newspaper</v-icon>
-                    <span class="title font-weight-light">{{ story.newspaper }}</span>
-                    <v-spacer></v-spacer>
-                    <v-icon class="mr-1">mdi-calendar</v-icon>
-                    <span class="subheading mr-2">{{ dateFormat(story.date) }}</span>
-                  </v-card-title>
-                  <v-card-text class="headline font-weight-bold">{{ story.headline }}</v-card-text>
-                  <!-- <v-card-text>
+            <v-flex>
+              <v-window v-model="window" class="elevation-1" vertical>
+                <v-window-item v-for="relatedStory in relatedNews" :key="relatedStory.id">
+                  <v-card flat class="mr-3">
+                    <v-card-title>
+                      <v-icon large left>mdi-newspaper</v-icon>
+                      <span class="title font-weight-light">{{ relatedStory.newspaper }}</span>
+                      <v-spacer></v-spacer>
+                      <v-icon class="mr-1">mdi-calendar</v-icon>
+                      <span class="subheading mr-2">{{ dateFormat(relatedStory.date) }}</span>
+                    </v-card-title>
+                    <v-card-text class="title font-weight-bold">{{ relatedStory.headline }}</v-card-text>
+                    <!-- <v-card-text>
                     <v-layout align-center mb-3>
                       <v-avatar color="grey" class="mr-3"></v-avatar>
                       <strong class="title">Title {{ n }}</strong>
@@ -111,25 +106,32 @@
                       </v-btn>
                     </v-layout>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </v-card-text>-->
-                  <v-divider></v-divider>
-                  <v-icon>label</v-icon>
-                  <span>Etiquetas</span>
-                  <v-flex wrap>
-                    <v-chip
-                      small
-                      disabled
-                      v-for="(item, index) in story.categories"
-                      :key="index"
-                    >{{item}}</v-chip>
-                  </v-flex>
-                </v-card>
-              </v-window-item>
-            </v-window>
-          </v-flex>
-        </v-layout>
+                    </v-card-text>-->
+                    <v-divider></v-divider>
+                    <v-icon left>label</v-icon>
+                    <span>Etiquetas en común</span>
+                    <v-flex wrap>
+                      <v-chip
+                        small
+                        disabled
+                        v-for="(item, index) in tagsMatched(relatedStory.categories)"
+                        :key="index"
+                      >{{item}}</v-chip>
+                    </v-flex>
+                  </v-card>
+                </v-window-item>
+              </v-window>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <!-- <v-card-actions>
+          <v-btn color="success">text</v-btn>
+          <v-divider></v-divider>
+          <v-btn color="success" @click="dialog = false">Cerrar</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn color="success">Texta</v-btn>
+        </v-card-actions>-->
 
-        <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="success" @click="dialog = false">Cerrar</v-btn>
@@ -141,12 +143,13 @@
 
 <script>
 import moment from "moment";
+import axios from "axios";
 
 export default {
   data: () => ({
     dialog: false,
     window: 0,
-    length: 3
+    relatedNews: []
   }),
   methods: {
     /* dateFormat(date) {
@@ -158,6 +161,19 @@ export default {
     readNews() {
       /* this.$emit('readNews', story); */
       this.dialog = true;
+      axios
+        .get(
+          "/api/related/" + encodeURIComponent(this.story.categories.join(","))
+        )
+        .then(response => {
+          this.relatedNews = response.data.response.docs;
+        })
+        .catch(e => {
+          this.errors.push(e);
+        });
+    },
+    tagsMatched(tags) {
+      return this.story.categories.filter(value => tags.includes(value));
     }
   },
   props: {

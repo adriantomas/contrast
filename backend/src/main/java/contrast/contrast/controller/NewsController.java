@@ -1,14 +1,21 @@
 package contrast.contrast.controller;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -21,7 +28,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import contrast.contrast.repository.NewsRepository;
 import contrast.contrast.model.News;
@@ -91,12 +97,24 @@ public class NewsController {
     } 
 
     @GetMapping(value="/related/{tags}")
-    public String getRelatedNews(@PathVariable List<String> tags) {
-        String uri = "http://localhost:8983/solr/news/select?defType=edismax&q=categories%3A";
-        String tagsQuery = uri + "(" + '"' + StringUtils.join(tags, '"' + "%20 OR %20" + '"') + '"' + ')';
+    public String getRelatedNews(@PathVariable List<String> tags) throws ClientProtocolException, IOException {      
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            String uri = "http://db:8983/solr/news/select?defType=edismax&q=categories%3A";
+            String tagsQuery = uri + "(" + "%20" + StringUtils.join(tags, "%20OR%20") + "%20" + ")&rows=3&start=1";
+            tagsQuery = tagsQuery.replace(" ", "+");
+            HttpGet httpGet = new HttpGet(tagsQuery);
 
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(tagsQuery, String.class);
-        return result;
+            ResponseHandler < String > responseHandler = response -> {
+                int status = response.getStatusLine().getStatusCode();
+                if (status >= 200 && status < 300) {
+                    HttpEntity entity = response.getEntity();
+                    return entity != null ? EntityUtils.toString(entity) : null;
+                } else {
+                    throw new ClientProtocolException("Unexpected response status: " + status);
+                }
+            };
+            String responseBody = httpClient.execute(httpGet, responseHandler);
+            return responseBody;
+        }
     }
 }
