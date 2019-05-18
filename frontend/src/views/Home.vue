@@ -19,7 +19,7 @@
         />
       </v-flex>
       <v-flex>
-        <NewsList :news="news" :readNews="onClickReadNews"/>
+        <NewsList :news="news"/>
         <v-layout row justify-center>
           <v-pagination :length="totalPages" v-model="page" v-on:input="this.search" :total-visible="7"></v-pagination>
         </v-layout>
@@ -36,7 +36,6 @@ import NewsList from "../components/NewsList";
 
 export default {
   data: () => ({
-    dialog: false,
     news: null,
     errors: null,
     totalPages: 0,
@@ -140,9 +139,6 @@ export default {
         .catch(e => {
           this.errors.push(e);
         });
-    },
-    onClickReadNews(news) {
-
     },
     onUpdateNewspapers(newspapers) {
       this.newspapersSelected = newspapers;

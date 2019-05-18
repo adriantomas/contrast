@@ -1,4 +1,4 @@
-package contrast.contrast.utils;
+package contrast.contrast.services;
 
 import edu.stanford.nlp.io.IOUtils;
 import edu.stanford.nlp.pipeline.CoreDocument;
@@ -17,7 +17,7 @@ public class NERTagger {
     private StanfordCoreNLP pipeline;
     private List<String> selectedTags;
 
-    public NERTagger()  {
+    public NERTagger() {
         Properties props = new Properties();
         try {
             props.load(IOUtils.readerFromString("StanfordCoreNLP-spanish.properties"));
@@ -28,17 +28,17 @@ public class NERTagger {
         props.setProperty("ner.useSUTime", "false");
         props.setProperty("ner.applyNumericClassifiers", "false");
         props.setProperty("ner.applyFineGrained", "false");
-        pipeline = new StanfordCoreNLP(props);
-        selectedTags = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON"/*, "CITY", "COUNTRY"*/);
+        this.pipeline = new StanfordCoreNLP(props);
+        this.selectedTags = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON"/* , "CITY", "COUNTRY" */);
     }
 
-    public Set<String> getNERTags (String doc) {
-        Set<String> nerTagsNotDup = new HashSet<String>();
+    public Set<String> getNERTags(String doc) {
+        Set<String> nerTags = new HashSet<String>();
         CoreDocument document = new CoreDocument(doc);
-        pipeline.annotate(document);
-        for (CoreEntityMention em : document.entityMentions()) 
+        this.pipeline.annotate(document);
+        for (CoreEntityMention em : document.entityMentions())
             if (selectedTags.contains(em.entityType()))
-                nerTagsNotDup.add(em.text());
-        return nerTagsNotDup;
+                nerTags.add(em.text());
+        return nerTags;
     }
 }

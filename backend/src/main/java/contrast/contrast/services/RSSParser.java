@@ -1,4 +1,4 @@
-package contrast.contrast.utils;
+package contrast.contrast.services;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,15 +25,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.core.io.ClassPathResource;
 
-import contrast.contrast.model.News;
-import contrast.contrast.utils.NERTagger;
+import contrast.contrast.models.News;
+import contrast.contrast.services.NERTagger;
 
 public class RSSParser {
 
     private String[] sources;
 
     public RSSParser() {
-        sources = null;
+        this.sources = null;
         try {
             File resource = new ClassPathResource("/static/RSS.txt").getFile();
             String data = new String(Files.readAllBytes(resource.toPath()));
@@ -46,36 +46,34 @@ public class RSSParser {
     public ArrayList<News> parseFeeds() {
         ArrayList<News> news = new ArrayList<News>();
         NERTagger tagger = new NERTagger();
+        LocalTime midnight = LocalTime.MIDNIGHT;
         try {
             if (sources != null) {
                 for (String rss : sources) {
-                    try (CloseableHttpClient client = HttpClients.createMinimal()){
+                    try (CloseableHttpClient client = HttpClients.createMinimal()) {
                         HttpUriRequest request = new HttpGet(rss);
                         try (CloseableHttpResponse response = client.execute(request);
-                            InputStream stream = response.getEntity().getContent()) {
-                                SyndFeed feed = new SyndFeedInput().build(new XmlReader(stream));
-                                LocalTime midnight = LocalTime.MIDNIGHT;
-                                for (SyndEntry entry : feed.getEntries()) {
-                                    Set<String> tags = new HashSet<String>();
-                                    for (SyndCategory cat : entry.getCategories()) {
-                                        tags.add(cat.getName());
-                                    }
-                                    tags.addAll(tagger.getNERTags(entry.getDescription().getValue().replaceAll("<[^>]*>", "") + " " + entry.getTitle()));  
-                                    LocalDate date = entry.getPublishedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                                    LocalDateTime dateParsed = LocalDateTime.of(date, midnight);
-                                    news.add(new News(feed.getTitle(), 
-                                        entry.getTitle(), 
-                                        dateParsed,
-                                        entry.getLink(), 
-                                        entry.getDescription().getValue(), 
-                                        entry.getDescription().getValue().replaceAll("<[^>]*>", ""),  
-                                        tags
-                                        ));
+                                InputStream stream = response.getEntity().getContent()) {
+                            SyndFeed feed = new SyndFeedInput().build(new XmlReader(stream));
+                            for (SyndEntry entry : feed.getEntries()) {
+                                Set<String> tags = new HashSet<String>();
+                                for (SyndCategory cat : entry.getCategories()) {
+                                    tags.add(cat.getName());
                                 }
-                            }       
+                                tags.addAll(
+                                        tagger.getNERTags(entry.getDescription().getValue().replaceAll("<[^>]*>", "")
+                                                + " " + entry.getTitle()));
+                                LocalDate date = entry.getPublishedDate().toInstant().atZone(ZoneId.systemDefault())
+                                        .toLocalDate();
+                                LocalDateTime dateParsed = LocalDateTime.of(date, midnight);
+                                news.add(new News(feed.getTitle(), entry.getTitle(), dateParsed, entry.getLink(),
+                                        entry.getDescription().getValue(),
+                                        entry.getDescription().getValue().replaceAll("<[^>]*>", ""), tags));
+                            }
+                        }
                     }
                 }
-            } 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

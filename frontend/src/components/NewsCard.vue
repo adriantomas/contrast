@@ -109,7 +109,7 @@
                     </v-card-text>-->
                     <v-divider></v-divider>
                     <v-icon left>label</v-icon>
-                    <span>Etiquetas en común</span>
+                    <span>Entidades en común</span>
                     <v-flex wrap>
                       <v-chip
                         small

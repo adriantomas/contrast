@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <v-subheader>Etiquetas</v-subheader>
+    <v-subheader>Entidades</v-subheader>
     <v-autocomplete
       v-model="tagsSelection"
       :items="tags"

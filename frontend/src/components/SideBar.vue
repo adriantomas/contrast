@@ -33,14 +33,12 @@
 
         <TagPicker :tags="tags" :tagsSelected="tagsSelected" @updateTags="onUpdateTags"/>
 
-        <v-divider></v-divider>
+       <!--  <v-divider></v-divider>
 
-        <!-- <v-flex class="mb-4"> -->
         <v-btn flat href="https://github.com/adriantomas/contrast" target="_blank">
           <span class="mr-2">Github</span>
           <v-icon>open_in_new</v-icon>
-        </v-btn>
-        <!--  </v-flex> -->
+        </v-btn> -->
       </v-layout>
     </v-navigation-drawer>
   </v-card>

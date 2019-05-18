@@ -50,31 +50,36 @@
           v-on="on"
         ></v-text-field>
       </template>
-      <v-date-picker
-        v-model="finalDate"
-        no-title
-        @input="datePicker2 = false"
-        first-day-of-week="1"
-        locale="es-es"
-        reactive
-        :max="max"
-        :min="initialDate"
-        :events="events"
-        :event-color="eventsColor"
-      ></v-date-picker>
+      <v-tooltip bottom z-index="1000">
+        <template v-slot:activator="{ on }">
+          <v-date-picker
+            v-model="finalDate"
+            no-title
+            @input="datePicker2 = false"
+            first-day-of-week="1"
+            locale="es-es"
+            reactive
+            :max="max"
+            :min="initialDate"
+            :events="events"
+            :event-color="eventsColor"
+            v-on="on"
+          ></v-date-picker>
+        </template>
+        <span>TOOLTIP</span>
+      </v-tooltip>
     </v-menu>
   </v-flex>
 </template>
 
 <script>
-
 import moment from "moment";
 moment.locale("es");
 
 export default {
   data: () => ({
     datePicker1: false,
-    datePicker2: false,
+    datePicker2: false
   }),
   computed: {
     formattedDate1() {
@@ -83,57 +88,80 @@ export default {
         : "";
     },
     formattedDate2() {
-      return this.finalDate
-        ? moment(this.finalDate).format("DD/MM/YYYY")
-        : "";
+      return this.finalDate ? moment(this.finalDate).format("DD/MM/YYYY") : "";
     },
-    min () {
-      return this.datesFacets.length ? new Date(Math.min.apply(null, this.datesFacets.map(a => new Date(a.name)))).toISOString().substr(0,10) : undefined;   
+    min() {
+      return this.datesFacets.length
+        ? new Date(
+            Math.min.apply(null, this.datesFacets.map(a => new Date(a.name)))
+          )
+            .toISOString()
+            .substr(0, 10)
+        : undefined;
     },
-    max () {
-      return this.datesFacets.length ? new Date(Math.max.apply(null, this.datesFacets.map(a => new Date(a.name)))).toISOString().substr(0,10) : undefined;
+    max() {
+      return this.datesFacets.length
+        ? new Date(
+            Math.max.apply(null, this.datesFacets.map(a => new Date(a.name)))
+          )
+            .toISOString()
+            .substr(0, 10)
+        : undefined;
     },
-    events () {
+    events() {
       if (this.datesFacets.length) {
-        var datesOrdered = this.datesFacets.sort((a, b) => parseInt(a.valueCount) - parseInt(b.valueCount));
-        return datesOrdered.map(a => new Date(a.name).toISOString().substr(0,10));
+        var datesOrdered = this.datesFacets;
+        datesOrdered.sort(
+          (a, b) => parseInt(a.valueCount) - parseInt(b.valueCount)
+        );
+        return datesOrdered.map(a =>
+          new Date(a.name).toISOString().substr(0, 10)
+        );
       }
       return null;
     },
-    initialDate : {
-      get () { return this.initialDateSelected },
-      set (v) { this.$emit('updateInitialDate', v)}
+    initialDate: {
+      get() {
+        return this.initialDateSelected;
+      },
+      set(v) {
+        this.$emit("updateInitialDate", v);
+      }
     },
-    finalDate : {
-      get () { return this.finalDateSelected },
-      set (v) { this.$emit('updateFinalDate', v)}
+    finalDate: {
+      get() {
+        return this.finalDateSelected;
+      },
+      set(v) {
+        this.$emit("updateFinalDate", v);
+      }
     }
   },
-  props: {   
+  props: {
     datesFacets: Array,
     initialDateSelected: String,
-    finalDateSelected: String,
+    finalDateSelected: String
   },
   methods: {
-    eventsColor (date) {
+    eventsColor(date) {
       if (this.datesFacets.length) {
         var datesOrdered = this.events;
         if (datesOrdered.includes(date)) {
-          if (datesOrdered.indexOf(date) < this.datesFacets.length/3) {
-            return 'amber lighten-5';
+          if (datesOrdered.indexOf(date) < this.datesFacets.length / 3) {
+            return "amber lighten-5";
+          } else if (
+            datesOrdered.indexOf(date) <
+            (this.datesFacets.length / 3) * 2
+          ) {
+            return "amber darken-1";
+          } else {
+            return "amber darken-4";
           }
-          else if (datesOrdered.indexOf(date) < (this.datesFacets.length/3)*2) {
-            return 'amber darken-1';
-          }
-          else { 
-            return 'amber darken-4';
-          }
+        } else {
+          return "grey";
         }
-        else {
-          return 'grey';
-        }      
       }
-    },
-  },
+    }
+  }
 };
 </script>

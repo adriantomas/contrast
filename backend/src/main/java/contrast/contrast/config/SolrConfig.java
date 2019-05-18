@@ -12,14 +12,13 @@ import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.repository.config.EnableSolrRepositories;
 
 @Configuration
-@EnableSolrRepositories(
-    basePackages = "contrast.contrast"
-    )
+@EnableSolrRepositories(basePackages = "contrast.contrast")
 
 @ComponentScan
 public class SolrConfig {
 
-    @Value("${spring.data.solr.host}") String solrURL;
+    @Value("${spring.data.solr.host}")
+    String solrURL;
 
     @Bean
     public SolrClient solrClient() throws MalformedURLException, IllegalStateException {
