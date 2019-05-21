@@ -94,7 +94,6 @@ export default {
             (this.page - 1)
         )
         .then(response => {
-          console.log(response);
           this.news = response.data.content;
           this.totalPages = response.data.totalPages;
 
