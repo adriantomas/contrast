@@ -27,15 +27,6 @@ services:
     volumes:
       - ./data:/opt/solr/server/solr/mycores
 
-  
-  #start_dependencies:
-  #  image: dadarek/wait-for-dependencies
-  #  depends_on:
-  #    - db
-  #  command: db:8983
-  #  networks:
-  #    - contrast-net
-
   node:
     image: node-vue
     container_name: vue

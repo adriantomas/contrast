@@ -15,7 +15,7 @@ import java.util.Set;
 public class NERTagger {
 
     private StanfordCoreNLP pipeline;
-    private List<String> selectedTags;
+    private List<String> selectedClassifiers;
 
     public NERTagger() {
         Properties props = new Properties();
@@ -29,7 +29,7 @@ public class NERTagger {
         props.setProperty("ner.applyNumericClassifiers", "false");
         props.setProperty("ner.applyFineGrained", "false");
         this.pipeline = new StanfordCoreNLP(props);
-        this.selectedTags = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON"/* , "CITY", "COUNTRY" */);
+        this.selectedClassifiers = Arrays.asList("ORGANIZATION", "LOCATION", "PERSON"/* , "CITY", "COUNTRY" */);
     }
 
     public Set<String> getNERTags(String doc) {
@@ -37,7 +37,7 @@ public class NERTagger {
         CoreDocument document = new CoreDocument(doc);
         this.pipeline.annotate(document);
         for (CoreEntityMention em : document.entityMentions())
-            if (selectedTags.contains(em.entityType()))
+            if (selectedClassifiers.contains(em.entityType()))
                 nerTags.add(em.text());
         return nerTags;
     }

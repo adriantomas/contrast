@@ -30,7 +30,8 @@
           </v-card-text>
   </v-slide-y-transition>-->
   <!--   </v-card> -->
-  <v-card class="ma-3" color="#26c6da">
+  <!-- color="#26c6da" -->
+  <v-card class="ma-3" color="cyan darken-2">
     <v-card-title>
       <v-icon large left>mdi-newspaper</v-icon>
       <span class="title font-weight-light">{{ story.newspaper }}</span>
