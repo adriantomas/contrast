@@ -8,7 +8,7 @@
         :label="`${newspaper.name} (${newspaper.valueCount})`"
         hide-details
         class="mt-2"
-    ></v-switch>
+      ></v-switch>
     </v-flex>
     <!-- <v-switch
       v-for="(newspaper, index) in newspapersBase"
@@ -27,15 +27,17 @@ export default {
   data: () => ({}),
   props: {
     newspapersBase: Array,
-    newspapersSelected: Array,
+    newspapersSelected: Array
   },
   computed: {
-    newspapers : {
-      get () { 
-        return this.newspapersSelected},
-      set (v) {   
-        this.$emit('updateNewspapers', v)}
+    newspapers: {
+      get() {
+        return this.newspapersSelected;
+      },
+      set(v) {
+        this.$emit("updateNewspapers", v);
+      }
     }
-  },
+  }
 };
 </script>

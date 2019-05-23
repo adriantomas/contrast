@@ -9,31 +9,40 @@
 
       <v-layout column wrap class="mx-2">
         <v-flex>
-          <v-text-field prepend-inner-icon="search" clearable label="Buscar" v-model="fragmentSelected"></v-text-field>
+          <v-text-field
+            prepend-inner-icon="search"
+            clearable
+            label="Buscar"
+            v-model="fragmentSelected"
+          ></v-text-field>
         </v-flex>
         <v-divider></v-divider>
 
         <NewspaperPicker
-          :newspapersBase="newspapersBase"
-          :newspapersSelected="newspapersSelected"
+          :newspapers-base="newspapersBase"
+          :newspapers-selected="newspapersSelected"
           @updateNewspapers="onUpdateNewspapers"
         />
 
         <v-divider></v-divider>
 
         <DatePicker
-          :datesFacets="datesFacets"
-          :initialDateSelected="initialDateSelected"
-          :finalDateSelected="finalDateSelected"
+          :dates-facets="datesFacets"
+          :initial-date-selected="initialDateSelected"
+          :final-date-selected="finalDateSelected"
           @updateInitialDate="onUpdateInitialDate"
           @updateFinalDate="onUpdateFinalDate"
         />
 
         <v-divider></v-divider>
 
-        <TagPicker :tags="tags" :tagsSelected="tagsSelected" @updateTags="onUpdateTags"/>
+        <TagPicker
+          :tags="tags"
+          :tags-selected="tagsSelected"
+          @updateTags="onUpdateTags"
+        />
 
-       <!--  <v-divider></v-divider>
+        <!--  <v-divider></v-divider>
 
         <v-btn flat href="https://github.com/adriantomas/contrast" target="_blank">
           <span class="mr-2">Github</span>
@@ -81,10 +90,14 @@ export default {
     }
   },
   computed: {
-    fragmentSelected : {
-      get () { return this.fragment },
-      set (v) { this.$emit('updateFragment', v)}
+    fragmentSelected: {
+      get() {
+        return this.fragment;
+      },
+      set(v) {
+        this.$emit("updateFragment", v);
+      }
     }
-  },
+  }
 };
 </script>

@@ -37,7 +37,9 @@
       <span class="title font-weight-light">{{ story.newspaper }}</span>
     </v-card-title>
 
-    <v-card-text class="headline font-weight-bold">{{ story.headline }}</v-card-text>
+    <v-card-text class="headline font-weight-bold">{{
+      story.headline
+    }}</v-card-text>
 
     <v-card-actions>
       <v-layout row wrap align-center>
@@ -70,13 +72,23 @@
 
     <v-dialog v-model="dialog" scrollable width="60%">
       <v-card>
-        <v-card-title primary-title class="headline">{{ story.headline }}</v-card-title>
+        <v-card-title primary-title class="headline">{{
+          story.headline
+        }}</v-card-title>
         <v-card-text>
           <span v-html="story.descriptionRaw"></span>
           <p class="headline">Noticias similares</p>
           <v-layout align-center>
-            <v-item-group v-model="window" class="shrink mr-4" mandatory tag="v-flex">
-              <v-item v-for="relatedStory in relatedNews" :key="relatedStory.id">
+            <v-item-group
+              v-model="window"
+              class="shrink mr-4"
+              mandatory
+              tag="v-flex"
+            >
+              <v-item
+                v-for="relatedStory in relatedNews"
+                :key="relatedStory.id"
+              >
                 <div slot-scope="{ active, toggle }">
                   <v-btn :input-value="active" icon @click="toggle">
                     <v-icon small>mdi-record</v-icon>
@@ -87,16 +99,25 @@
 
             <v-flex>
               <v-window v-model="window" class="elevation-1" vertical>
-                <v-window-item v-for="relatedStory in relatedNews" :key="relatedStory.id">
+                <v-window-item
+                  v-for="relatedStory in relatedNews"
+                  :key="relatedStory.id"
+                >
                   <v-card flat class="mr-3">
                     <v-card-title>
                       <v-icon large left>mdi-newspaper</v-icon>
-                      <span class="title font-weight-light">{{ relatedStory.newspaper }}</span>
+                      <span class="title font-weight-light">{{
+                        relatedStory.newspaper
+                      }}</span>
                       <v-spacer></v-spacer>
                       <v-icon class="mr-1">mdi-calendar</v-icon>
-                      <span class="subheading mr-2">{{ dateFormat(relatedStory.date) }}</span>
+                      <span class="subheading mr-2">{{
+                        dateFormat(relatedStory.date)
+                      }}</span>
                     </v-card-title>
-                    <v-card-text class="title font-weight-bold">{{ relatedStory.headline }}</v-card-text>
+                    <v-card-text class="title font-weight-bold">{{
+                      relatedStory.headline
+                    }}</v-card-text>
                     <!-- <v-card-text>
                     <v-layout align-center mb-3>
                       <v-avatar color="grey" class="mr-3"></v-avatar>
@@ -115,9 +136,12 @@
                       <v-chip
                         small
                         disabled
-                        v-for="(item, index) in tagsMatched(relatedStory.categories)"
+                        v-for="(item, index) in tagsMatched(
+                          relatedStory.categories
+                        )"
                         :key="index"
-                      >{{item}}</v-chip>
+                        >{{ item }}</v-chip
+                      >
                     </v-flex>
                   </v-card>
                 </v-window-item>

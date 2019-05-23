@@ -3,25 +3,30 @@
     <v-layout row>
       <v-flex>
         <SideBar
-          :newspapersBase="newspapersBase"
-          :newspapersSelected="newspapersSelected"
+          :newspapers-base="newspapersBase"
+          :newspapers-selected="newspapersSelected"
           @updateNewspapers="onUpdateNewspapers"
-          :datesFacets="datesFacets"
-          :initialDateSelected="initialDateSelected"
-          :finalDateSelected="finalDateSelected"
+          :dates-facets="datesFacets"
+          :initial-date-selected="initialDateSelected"
+          :final-date-selected="finalDateSelected"
           @updateInitialDate="onUpdateInitialDate"
           @updateFinalDate="onUpdateFinalDate"
           :tags="tags"
-          :tagsSelected="tagsSelected"
+          :tags-selected="tagsSelected"
           @updateTags="onUpdateTags"
           :fragment="fragment"
           @updateFragment="onUpdateFragment"
         />
       </v-flex>
       <v-flex>
-        <NewsList :news="news"/>
+        <NewsList :news="news" />
         <v-layout row justify-center>
-          <v-pagination :length="totalPages" v-model="page" v-on:input="this.search" :total-visible="7"></v-pagination>
+          <v-pagination
+            :length="totalPages"
+            v-model="page"
+            @input="this.search"
+            :total-visible="7"
+          ></v-pagination>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -63,19 +68,6 @@ export default {
       const tagsQuery = this.tagsSelected.length ? this.tagsSelected : "*";
       const fragmentQuery =
         this.fragment && this.fragment.length ? this.fragment : "*";
-      var query =
-        "/api/content/" +
-        this.newspapersSelected.map(a => a.name) +
-        "/" +
-        this.initialDateSelected +
-        "/" +
-        this.finalDateSelected +
-        "/" +
-        tagsQuery +
-        "/" +
-        fragmentQuery +
-        "/" +
-        (this.page - 1);
       /*  console.log("/api/content/" + encodeURIComponent(this.newspapersSelected.map(a => a.name))  + "/" + this.initialDateSelected + "/" + this.finalDateSelected + "/" + encodeURIComponent(tagsQuery) + "/" + encodeURIComponent(fragmentQuery) + "/" + (this.page -1));
       console.log("/api/content/" + this.newspapersSelected.map(a => a.name) + "/" + this.initialDateSelected + "/" + this.finalDateSelected + "/" + tagsQuery + "/" + fragmentQuery + "/" + (this.page -1)); */
       axios
@@ -106,7 +98,7 @@ export default {
           });
 
           var newNewspapersBase = [];
-          
+
           response.data.facetResultPages[0].content.forEach(element => {
             newNewspapersBase.push({
               name: element.value,
@@ -132,8 +124,13 @@ export default {
           } else {
             finalNewspapers = newNewspapersBase;
           }
-          finalNewspapers.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-          Array.prototype.splice.apply(this.newspapersBase, [0, finalNewspapers.length].concat(finalNewspapers));
+          finalNewspapers.sort((a, b) =>
+            a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+          );
+          Array.prototype.splice.apply(
+            this.newspapersBase,
+            [0, finalNewspapers.length].concat(finalNewspapers)
+          );
         })
         .catch(e => {
           this.errors.push(e);
@@ -177,8 +174,12 @@ export default {
             valueCount: element.valueCount
           });
         });
-        this.newspapersBase.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-        this.newspapersSelected.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+        this.newspapersBase.sort((a, b) =>
+          a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+        );
+        this.newspapersSelected.sort((a, b) =>
+          a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+        );
 
         response.data.facetResultPages[1].content.forEach(element => {
           this.datesFacets.push({
