@@ -37,6 +37,15 @@ export default {
       set(v) {
         this.$emit("updateNewspapers", v);
       }
+    },
+    newspaperCount () {
+      newspaperArray = this.newspapersBase;
+      for (const key in news) {
+        if (object.hasOwnProperty(key)) {
+          const element = object[key];
+          
+        }
+      }
     }
   }
 };

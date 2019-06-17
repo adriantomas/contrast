@@ -84,7 +84,8 @@ public class NewsController {
                 fragment = java.net.URLDecoder.decode(fragment, StandardCharsets.UTF_8.name());
             } catch (UnsupportedEncodingException e) {
             }
-            fragmentQuery = "*" + '"' + fragment + '"' + "*";
+            /* fragmentQuery = "*" + '"' + fragment + '"' + "*"; */
+            fragmentQuery = "*" + fragment + "*";
         } else {
             fragmentQuery = fragment;
         }

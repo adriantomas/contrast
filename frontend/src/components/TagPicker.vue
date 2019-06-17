@@ -25,23 +25,14 @@
         </v-chip>
       </template>
       <template v-slot:item="data">
-        <!-- <span>{{data.item.name}} ({{data.item.valueCount}})</span> -->
         <span v-html="data.item.name"> </span>
         <v-spacer></v-spacer>
         <span class="body-2 grey--text"> ({{ data.item.valueCount }})</span>
-        <!-- {{data.item.valueCount}} -->
-        <!-- <v-list-tile-avatar> -->
-        <!-- <v-icon>label</v-icon> -->
-        <!-- </v-list-tile-avatar> -->
-        <!--  <v-list-tile-content>
-          <v-list-tile-title v-html="data.item.name"><span v-html="data.item.valueCount"></span></v-list-tile-title>
-          
-          <v-list-tile-sub-title v-html="data.item.valueCount"></v-list-tile-sub-title> -->
-        <!-- </v-list-tile-content> -->
       </template>
     </v-autocomplete>
   </v-flex>
 </template>
+
 <script>
 export default {
   data: () => ({}),

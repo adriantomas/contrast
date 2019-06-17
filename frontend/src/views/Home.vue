@@ -19,14 +19,9 @@
         />
       </v-flex>
       <v-flex>
-        <NewsList :news="news" />
+        <NewsList :news="news"/>
         <v-layout row justify-center>
-          <v-pagination
-            :length="totalPages"
-            v-model="page"
-            @input="this.search"
-            :total-visible="7"
-          ></v-pagination>
+          <v-pagination :length="totalPages" v-model="page" @input="this.search" :total-visible="7"></v-pagination>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -95,6 +90,24 @@ export default {
               name: element.value,
               valueCount: element.valueCount
             });
+          });
+
+          this.datesFacets.length = 0;
+          response.data.facetResultPages[1].content.forEach(element => {
+            this.datesFacets.push({
+              name: element.value,
+              valueCount: element.valueCount
+            });
+            this.initialDateSelected = new Date(
+              Math.min.apply(null, this.datesFacets.map(a => new Date(a.name)))
+            )
+              .toISOString()
+              .substr(0, 10);
+            this.finalDateSelected = new Date(
+              Math.max.apply(null, this.datesFacets.map(a => new Date(a.name)))
+            )
+              .toISOString()
+              .substr(0, 10);
           });
 
           var newNewspapersBase = [];
